@@ -37,29 +37,42 @@ public class TextureInfo
 		textures.put("minecraft:dirt", new int[] {1,0,10,1,0});
 		textures.put("minecraft:farmland", new int[] {1,0xBEA090,10,1,0});
 		textures.put("minecraft:grass", new int[] {1,0x6CD75D,10,1,0});
+		textures.put("minecraft:sand", new int[] {5,0x897946,10,1,0});
+		textures.put("minecraft:gravel", new int[] {1,0x6899A0,10,1,0});
+		textures.put("minecraft:clay", new int[] {5,0x6D7B7B,10,1,0});
 		textures.put("minecraft:planks", new int[] {2,0,10,1,0});
 		textures.put("minecraft:log", new int[] {2,0xB68E73,10,1,0});
 		textures.put("minecraft:wool", new int[] {5,0,10,1,0});
 		textures.put("minecraft:leaves", new int[] {5,0x173C10,10,1,0});
 		textures.put("minecraft:leaves2", new int[] {5,0x173C10,10,1,0});
-		textures.put("minecraft:water", new int[] {1,0x0B8DD4,10,1,0});
+		textures.put("minecraft:water", new int[] {1,0x0B8DD4,8,1,0});
 		textures.put("minecraft:lava", new int[] {1,0x9B350B,10,1,0});
 		textures.put("minecraft:glass", new int[] {5,0xADD3ED,4,1,0});
 		textures.put("minecraft:glass_pane", new int[] {5,0xADD3ED,4,1,0});
 		textures.put("minecraft:double_stone_slab", new int[] {5,0x7F7F7F,10,1,0});
+		textures.put("minecraft:snow", new int[] {5,0xFFFAFA,10,1,0});
 
 		textures.put("minecraft:fence", new int[] {2,0,10,1,1});
 		textures.put("minecraft:stone_slab", new int[] {5,0x7F7F7F,10,1,1});
 		textures.put("minecraft:tallgrass", new int[] {5,0x284D22,10,0,1});
 		textures.put("minecraft:wheat", new int[] {5,0x9B8625,10,0,1});
+		textures.put("minecraft:beetroots", new int[] {5,0x5F1a1a,10,0,1});
+		textures.put("minecraft:carrots", new int[] {5,0xA25704,10,0,1});
 		textures.put("minecraft:iron_bars", new int[] {5,0x43464B,10,1,1});
 		textures.put("minecraft:chest", new int[] {2,0xC3B67B,10,1,1});
 		textures.put("minecraft:wooden_pressure_plate", new int[] {2,0,10,1,1});
+		textures.put("minecraft:snow_layer", new int[] {5,0xFFFAFA,10,1,1});
 		textures.put("minecraft:grass_path", new int[] {1,0xDEC488,10,1,1});
 		textures.put("minecraft:oak_stairs", new int[] {2,0,10,1,1});
 		textures.put("minecraft:stone_stairs", new int[] {0,0,10,1,1});
+		textures.put("minecraft:red_flower", new int[] {5,0xAC1313,10,1,1});
 		
+		//ignored blocks
 		textures.put("minecraft:double_plant", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:ladder", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:torch", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:wooden_door", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:iron_door", new int[] {-1,0,0,0,0});
 	}
 	
 	public static JSONArray addTextureInfo(Map objIn, IBlockState state)
@@ -157,7 +170,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);
 		}
-		else if(block == Blocks.TALLGRASS || block == Blocks.WHEAT)
+		else if(block == Blocks.TALLGRASS || block == Blocks.WHEAT || block == Blocks.BEETROOTS || block == Blocks.CARROTS)
 		{
 			ArrayList<Integer> oldPos = (ArrayList<Integer>) objIn.get("p");
 			int centerX = oldPos.get(0);
@@ -261,7 +274,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);
 		}
-		else if(block == Blocks.WOODEN_PRESSURE_PLATE)
+		else if(block == Blocks.WOODEN_PRESSURE_PLATE || block == Blocks.SNOW_LAYER)
 		{
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
 		    	add(Reference.VOXEL_SIZE);
@@ -364,6 +377,42 @@ public class TextureInfo
 			}
     		
     		fancyObj.add(stairs2);
+		}
+		else if(block == Blocks.RED_FLOWER)
+		{
+			Map flower2 = (Map) ((LinkedHashMap)objIn).clone();
+			
+			ArrayList<Integer> oldPos = (ArrayList<Integer>) objIn.get("p");
+			int centerX = oldPos.get(0);
+			int bottomY = oldPos.get(1);
+			int centerZ = oldPos.get(2);
+			
+			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
+		    	add(2);
+		    	add(2);
+		    	add(2);
+	    	}};
+			objIn.put("s", voxelSize);
+			
+			ArrayList<Integer> newPos = new ArrayList<Integer>() {{
+    			add(centerX);
+    			add(bottomY+3);
+    			add(centerZ);
+    		}};
+    		objIn.put("p", newPos);
+			
+			fancyObj.add(objIn);
+
+			voxelSize = new ArrayList<Integer>() {{
+		    	add(1);
+		    	add(3);
+		    	add(1);
+	    	}};
+	    	flower2.put("s", voxelSize);
+	    	flower2.put("c", 0x163C10);
+	    	
+	    	fancyObj.add(flower2);
+			
 		}
 		
 		return fancyObj;

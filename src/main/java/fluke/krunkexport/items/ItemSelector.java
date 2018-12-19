@@ -129,19 +129,12 @@ public class ItemSelector extends ItemBasic
     		}
     	}
     	
-    	try {
-			objects = MergeBlocks.mergeObjs(objects);
-		} catch (ScriptException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
+    	SaveToFile.saveFile(mapout.toString(), "premerge.txt");
+		objects = MergeBlocks.mergeObjs(objects);
+
     	mapout.put("objects", objects);
     	
-    	SaveToFile.saveFile(mapout.toString());
+    	SaveToFile.saveFile(mapout.toString(), "postmerge.txt");
     }
 
 

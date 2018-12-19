@@ -15,17 +15,19 @@ import net.minecraft.client.Minecraft;
 public class SaveToFile 
 {
 	
-	public static final File SAVE_FILE = new File(Minecraft.getMinecraft().mcDataDir, "krunker.txt");
+	//public static final File SAVE_FILE = new File(Minecraft.getMinecraft().mcDataDir, "krunker.txt");
 	
-	public static void saveFile(String data)
+	public static void saveFile(String data, String fileName)
 	{
+		File saveFile = new File(Minecraft.getMinecraft().mcDataDir, fileName);
+		
 		Writer writer = null;
 		PrintWriter pw = null;
 		try {
 			//writer = new OutputStreamWriter(new FileOutputStream(saveFile), StandardCharsets.UTF_8);
 			//writer.write(data);
 			
-			pw = new PrintWriter(SAVE_FILE);
+			pw = new PrintWriter(saveFile);
 			pw.write(data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
