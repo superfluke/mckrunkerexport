@@ -8,6 +8,7 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 
@@ -42,7 +43,7 @@ public class TextureInfo
 		textures.put("minecraft:clay", new int[] {5,0x6D7B7B,10,1,0});
 		textures.put("minecraft:planks", new int[] {2,0,10,1,0});
 		textures.put("minecraft:log", new int[] {2,0xB68E73,10,1,0});
-		textures.put("minecraft:wool", new int[] {5,0,10,1,0});
+		textures.put("minecraft:log2", new int[] {2,0xB68E73,10,1,0});
 		textures.put("minecraft:leaves", new int[] {5,0x173C10,10,1,0});
 		textures.put("minecraft:leaves2", new int[] {5,0x173C10,10,1,0});
 		textures.put("minecraft:water", new int[] {1,0x0B8DD4,8,1,0});
@@ -51,8 +52,13 @@ public class TextureInfo
 		textures.put("minecraft:glass_pane", new int[] {5,0xADD3ED,4,1,0});
 		textures.put("minecraft:double_stone_slab", new int[] {5,0x7F7F7F,10,1,0});
 		textures.put("minecraft:snow", new int[] {5,0xFFFAFA,10,1,0});
-
+		textures.put("minecraft:brick_block", new int[] {0,0xC84B4B,10,1,0});
+		textures.put("minecraft:nether_brick", new int[] {0,0x910D1D,10,1,0});
+		
+		//complex models
 		textures.put("minecraft:fence", new int[] {2,0,10,1,1});
+		textures.put("minecraft:dark_oak_fence", new int[] {2,0xACABAB,10,1,1});
+		textures.put("minecraft:cobblestone_wall", new int[] {0,0,10,1,1});
 		textures.put("minecraft:stone_slab", new int[] {5,0x7F7F7F,10,1,1});
 		textures.put("minecraft:tallgrass", new int[] {5,0x284D22,10,0,1});
 		textures.put("minecraft:wheat", new int[] {5,0x9B8625,10,0,1});
@@ -62,10 +68,19 @@ public class TextureInfo
 		textures.put("minecraft:chest", new int[] {2,0xC3B67B,10,1,1});
 		textures.put("minecraft:wooden_pressure_plate", new int[] {2,0,10,1,1});
 		textures.put("minecraft:snow_layer", new int[] {5,0xFFFAFA,10,1,1});
+		textures.put("minecraft:carpet", new int[] {5,0,10,1,1});
 		textures.put("minecraft:grass_path", new int[] {1,0xDEC488,10,1,1});
 		textures.put("minecraft:oak_stairs", new int[] {2,0,10,1,1});
+		textures.put("minecraft:spruce_stairs", new int[] {2,0,10,1,1});
+		textures.put("minecraft:dark_oak_stairs", new int[] {2,0,10,1,1});
+		//textures.put("minecraft:spruce_stairs", new int[] {2,0xACABAB,10,1,1});
+		//textures.put("minecraft:dark_oak_stairs", new int[] {2,0xACABAB,10,1,1});
+		textures.put("minecraft:stone_brick_stairs", new int[] {0,0,10,1,1});
+		textures.put("minecraft:brick_stairs", new int[] {0,0xC84B4B,10,1,1});
+		textures.put("minecraft:nether_brick_stairs", new int[] {0,0x910D1D,10,1,1});
 		textures.put("minecraft:stone_stairs", new int[] {0,0,10,1,1});
 		textures.put("minecraft:red_flower", new int[] {5,0xAC1313,10,1,1});
+		textures.put("minecraft:wool", new int[] {5,0,10,1,1});
 		
 		//ignored blocks
 		textures.put("minecraft:double_plant", new int[] {-1,0,0,0,0});
@@ -159,7 +174,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);
 		}
-		else if(block == Blocks.OAK_FENCE)
+		else if(block == Blocks.OAK_FENCE || block == Blocks.COBBLESTONE_WALL || block == Blocks.DARK_OAK_FENCE)
 		{
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
 		    	add((Reference.VOXEL_SIZE/4));
@@ -285,6 +300,24 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);		
 		}
+		else if(block == Blocks.CARPET)
+		{
+			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
+		    	add(Reference.VOXEL_SIZE);
+		    	add(1);
+		    	add(Reference.VOXEL_SIZE);
+	    	}};
+			objIn.put("s", voxelSize);
+			
+			objIn.put("c", MapColor.BLOCK_COLORS[block.getMetaFromState(state)].colorValue);
+			
+			fancyObj.add(objIn);		
+		}
+		else if(block == Blocks.WOOL)
+		{
+			objIn.put("c", MapColor.BLOCK_COLORS[block.getMetaFromState(state)].colorValue);
+			fancyObj.add(objIn);
+		}
 		else if(block == Blocks.GRASS_PATH)
 		{
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
@@ -296,7 +329,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);
 		}
-		else if(block == Blocks.OAK_STAIRS || block == Blocks.STONE_STAIRS)
+		else if(block == Blocks.OAK_STAIRS || block == Blocks.STONE_STAIRS || block == Blocks.SPRUCE_STAIRS || block == Blocks.DARK_OAK_STAIRS || block == Blocks.STONE_BRICK_STAIRS || block == Blocks.BRICK_STAIRS || block == Blocks.NETHER_BRICK_STAIRS)
 		{
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
 		    	add((Reference.VOXEL_SIZE));
@@ -306,10 +339,11 @@ public class TextureInfo
 			objIn.put("s", voxelSize);
 			
 			ArrayList<Integer> oldPos = (ArrayList<Integer>) objIn.get("p");
-			fancyObj.add(objIn);
+			
     		
 			int stairMeta = block.getMetaFromState(state);
-			stairMeta = (stairMeta > 3) ? stairMeta - 4 : stairMeta; //fuck you upsidedown stairs
+			int upsideDown = (stairMeta > 3) ? 0 : 1;
+			stairMeta = (stairMeta > 3) ? stairMeta - 4 : stairMeta; 
 			/*
 				0 east
 				1 west
@@ -318,6 +352,17 @@ public class TextureInfo
 			 */
 			
 			Map stairs2 = (Map) ((LinkedHashMap)objIn).clone();
+			
+			if(upsideDown == 0)
+			{
+				ArrayList<Integer> newPos = new ArrayList<Integer>() {{
+	    			add(oldPos.get(0));
+	    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2);
+	    			add(oldPos.get(2));
+	    		}};
+	    		objIn.put("p", newPos);
+			}
+			fancyObj.add(objIn);
 			
 			if(stairMeta == 0 || stairMeta == 1)
 			{
@@ -333,7 +378,7 @@ public class TextureInfo
 		    	{
 			    	newPos = new ArrayList<Integer>() {{
 		    			add(oldPos.get(0)+Reference.VOXEL_SIZE/4);
-		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2);
+		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2*upsideDown);
 		    			add(oldPos.get(2));
 		    		}};
 		    	}
@@ -341,7 +386,7 @@ public class TextureInfo
 		    	{
 		    		newPos = new ArrayList<Integer>() {{
 		    			add(oldPos.get(0)-Reference.VOXEL_SIZE/4);
-		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2);
+		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2*upsideDown);
 		    			add(oldPos.get(2));
 		    		}};
 		    	}
@@ -361,7 +406,7 @@ public class TextureInfo
 		    	{
 			    	newPos = new ArrayList<Integer>() {{
 		    			add(oldPos.get(0));
-		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2);
+		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2*upsideDown);
 		    			add(oldPos.get(2)+Reference.VOXEL_SIZE/4);
 		    		}};
 		    	}
@@ -369,7 +414,7 @@ public class TextureInfo
 		    	{
 		    		newPos = new ArrayList<Integer>() {{
 		    			add(oldPos.get(0));
-		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2);
+		    			add(oldPos.get(1)+Reference.VOXEL_SIZE/2*upsideDown);
 		    			add(oldPos.get(2)-Reference.VOXEL_SIZE/4);
 		    		}};
 		    	}
