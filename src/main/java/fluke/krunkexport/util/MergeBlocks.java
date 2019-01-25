@@ -115,6 +115,8 @@ public class MergeBlocks
 						    		obj1.put("s", newsize);
 						    		objs.remove(obj2Index);
 						    		objsMerged++;
+						    		if(objsMerged % 3000 == 0)
+						    			System.out.println(objsMerged);
 								}
 								else
 								{

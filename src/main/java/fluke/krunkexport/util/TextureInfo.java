@@ -34,6 +34,7 @@ public class TextureInfo
 		//("blockname", {texture_id, color, opacity, collidable, hasMoreComplexModel})
 		textures.put("minecraft:stone", new int[] {0,0,10,1,0});
 		textures.put("minecraft:cobblestone", new int[] {0,0,10,1,0});
+		textures.put("minecraft:stonebrick", new int[] {0,0,10,1,0});
 		textures.put("minecraft:furnace", new int[] {0,0,10,1,0});
 		textures.put("minecraft:dirt", new int[] {1,0,10,1,0});
 		textures.put("minecraft:farmland", new int[] {1,0xBEA090,10,1,0});
@@ -57,6 +58,8 @@ public class TextureInfo
 		textures.put("minecraft:brick_block", new int[] {0,0xC84B4B,10,1,0});
 		textures.put("minecraft:nether_brick", new int[] {0,0x910D1D,10,1,0});
 		textures.put("minecraft:iron_block", new int[] {4,0xA0A0A0,10,1,0});
+		textures.put("minecraft:obsidian", new int[] {0,0x6F0F75,10,1,0});
+		textures.put("minecraft:bedrock", new int[] {0,0x505050,10,1,0});
 		
 		//complex models
 		textures.put("minecraft:fence", new int[] {2,0,10,1,1});
@@ -79,7 +82,7 @@ public class TextureInfo
 		textures.put("minecraft:dark_oak_stairs", new int[] {2,0,10,1,1});
 		textures.put("minecraft:sandstone_stairs", new int[] {5,0x897946,10,1,1});
 		textures.put("minecraft:jungle_stairs", new int[] {2,0,10,1,1});
-		//textures.put("minecraft:dark_oak_stairs", new int[] {2,0xACABAB,10,1,1});
+		textures.put("minecraft:birch_stairs", new int[] {2,0,10,1,1});
 		textures.put("minecraft:stone_brick_stairs", new int[] {0,0,10,1,1});
 		textures.put("minecraft:brick_stairs", new int[] {0,0xC84B4B,10,1,1});
 		textures.put("minecraft:nether_brick_stairs", new int[] {0,0x910D1D,10,1,1});
@@ -95,6 +98,14 @@ public class TextureInfo
 		textures.put("minecraft:wooden_door", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:iron_door", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:lever", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:rail", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:golden_rail", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:web", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:redstone_lamp", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:waterlily", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:sign", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:wall_sign", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:stone_button", new int[] {-1,0,0,0,0});
 	}
 	
 	public static JSONArray addTextureInfo(Map objIn, IBlockState state)
@@ -160,6 +171,8 @@ public class TextureInfo
 		//begin if statement from hell
 		if(block == Blocks.STONE_SLAB || block == Blocks.WOODEN_SLAB)
 		{
+			int meta = block.getMetaFromState(state);
+			
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
 		    	add((Reference.VOXEL_SIZE));
 		    	add((Reference.VOXEL_SIZE/2));
@@ -169,8 +182,13 @@ public class TextureInfo
 			
 			ArrayList<Integer> oldPos = (ArrayList<Integer>) objIn.get("p");
 			
+			if(meta == 4 || (meta - 8) == 4)
+			{
+				objIn.put("c", 0xC84B4B);
+			}
+			
 			//upper slab
-			if(block.getMetaFromState(state) == 8)
+			if(meta >= 8)
 			{
 				ArrayList<Integer> newPos = new ArrayList<Integer>() {{
 	    			add(oldPos.get(0));
