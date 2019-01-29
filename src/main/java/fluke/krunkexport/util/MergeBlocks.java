@@ -34,8 +34,8 @@ public class MergeBlocks
 			int axisIndex = axisIndexList[n];
 			
 			System.out.println("Merging " + mergeAxis + " axis");
-			while(true)
-			{
+			//while(true)
+			//{
 				int objsMerged = 0;
 				
 				for(int i=0; i<objs.size(); i++)
@@ -237,11 +237,11 @@ public class MergeBlocks
 					
 				}
 				
-				if(objsMerged == 0)
-					break;
-				else
+				//if(objsMerged == 0)
+					//break;
+				//else
 					System.out.println("    " + objsMerged + " objects merged");
-			}
+			//}
 		}
 		
 		System.out.println("Finished merge with " + objs.size() + " objects");

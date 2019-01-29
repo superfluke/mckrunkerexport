@@ -118,7 +118,7 @@ public class ItemSelector extends ItemBasic
 	    		newthing.put("p", krPos);
 	        	newthing.put("s", voxelSize);
 	        	
-	        	JSONArray texturedNewthing = TextureInfo.addTextureInfo(newthing, state);
+	        	JSONArray texturedNewthing = TextureInfo.addTextureInfo(newthing, state, pos);
 	        	if(texturedNewthing != null)
 	        	{
 		        	for(int i=0; i<texturedNewthing.size(); i++)

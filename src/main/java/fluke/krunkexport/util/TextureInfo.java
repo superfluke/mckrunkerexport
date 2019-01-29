@@ -8,9 +8,14 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFence;
 import net.minecraft.block.material.MapColor;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.DimensionManager;
 
 public class TextureInfo 
 {
@@ -46,24 +51,28 @@ public class TextureInfo
 		textures.put("minecraft:planks", new int[] {2,0,10,1,0});
 		textures.put("minecraft:log", new int[] {2,0xB68E73,10,1,0});
 		textures.put("minecraft:log2", new int[] {2,0xB68E73,10,1,0});
+		textures.put("minecraft:jukebox", new int[] {2,0,10,1,0});
 		textures.put("minecraft:leaves", new int[] {5,0x173C10,10,1,0});
 		textures.put("minecraft:leaves2", new int[] {5,0x173C10,10,1,0});
-		textures.put("minecraft:water", new int[] {1,0x0B8DD4,8,1,0});
+		textures.put("minecraft:water", new int[] {1,0x0B8DD4,8,0,0});
 		textures.put("minecraft:lava", new int[] {1,0x9B350B,10,1,0});
 		textures.put("minecraft:glass", new int[] {5,0xADD3ED,4,1,0});
 		textures.put("minecraft:glass_pane", new int[] {5,0xADD3ED,4,1,0});
 		textures.put("minecraft:double_stone_slab", new int[] {5,0x7F7F7F,10,1,0});
 		textures.put("minecraft:double_wooden_slab", new int[] {2,0,10,1,0});
 		textures.put("minecraft:snow", new int[] {5,0xFFFAFA,10,1,0});
+		textures.put("minecraft:quartz_block", new int[] {5,0xFFFAFA,10,1,0});
 		textures.put("minecraft:brick_block", new int[] {0,0xC84B4B,10,1,0});
 		textures.put("minecraft:nether_brick", new int[] {0,0x910D1D,10,1,0});
 		textures.put("minecraft:iron_block", new int[] {4,0xA0A0A0,10,1,0});
 		textures.put("minecraft:obsidian", new int[] {0,0x6F0F75,10,1,0});
 		textures.put("minecraft:bedrock", new int[] {0,0x505050,10,1,0});
+		textures.put("minecraft:netherrack", new int[] {0,0xD23838,10,1,0});
 		
 		//complex models
 		textures.put("minecraft:fence", new int[] {2,0,10,1,1});
 		textures.put("minecraft:dark_oak_fence", new int[] {2,0xACABAB,10,1,1});
+		textures.put("minecraft:nether_brick_fence", new int[] {0,0x910D1D,10,1,1});
 		textures.put("minecraft:cobblestone_wall", new int[] {0,0,10,1,1});
 		textures.put("minecraft:stone_slab", new int[] {5,0x7F7F7F,10,1,1});
 		textures.put("minecraft:wooden_slab", new int[] {2,0,10,1,1});
@@ -87,9 +96,14 @@ public class TextureInfo
 		textures.put("minecraft:brick_stairs", new int[] {0,0xC84B4B,10,1,1});
 		textures.put("minecraft:nether_brick_stairs", new int[] {0,0x910D1D,10,1,1});
 		textures.put("minecraft:stone_stairs", new int[] {0,0,10,1,1});
+		textures.put("minecraft:quartz_stairs", new int[] {5,0xFFFAFA,10,1,1});
 		textures.put("minecraft:red_flower", new int[] {5,0xAC1313,10,1,1});
 		textures.put("minecraft:wool", new int[] {5,0,10,1,1});
+		textures.put("minecraft:hardened_clay", new int[] {5,0,10,1,1});
+		textures.put("minecraft:stained_hardened_clay", new int[] {1,0,10,1,1});
 		textures.put("minecraft:anvil", new int[] {5,0x2A2A2A,10,1,1});
+		textures.put("minecraft:redstone_lamp", new int[] {5,0x939366,10,1,1});
+		textures.put("minecraft:glowstone", new int[] {5,0x939366,10,1,1});
 		
 		//ignored blocks
 		textures.put("minecraft:double_plant", new int[] {-1,0,0,0,0});
@@ -106,9 +120,12 @@ public class TextureInfo
 		textures.put("minecraft:sign", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:wall_sign", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:stone_button", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:barrier", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:flower_pot", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:trapdoor", new int[] {-1,0,0,0,0});
 	}
 	
-	public static JSONArray addTextureInfo(Map objIn, IBlockState state)
+	public static JSONArray addTextureInfo(Map objIn, IBlockState state, BlockPos pos)
 	{
 		String blockName = state.getBlock().getRegistryName().toString();
 		JSONArray objectsOut = new JSONArray();
@@ -144,7 +161,7 @@ public class TextureInfo
 			
 			if(extraData[4] == 1)
 			{
-				objectsOut = complexModel(objIn, state);
+				objectsOut = complexModel(objIn, state, pos);
 			}
 			else
 			{
@@ -164,7 +181,7 @@ public class TextureInfo
 		return objectsOut;
 	}
 
-	private static JSONArray complexModel(Map objIn, IBlockState state) {
+	private static JSONArray complexModel(Map objIn, IBlockState state, BlockPos pos) {
 		JSONArray fancyObj = new JSONArray();
 		Block block = state.getBlock();
 		
@@ -200,7 +217,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);
 		}
-		else if(block == Blocks.OAK_FENCE || block == Blocks.COBBLESTONE_WALL || block == Blocks.DARK_OAK_FENCE)
+		else if(block == Blocks.OAK_FENCE || block == Blocks.COBBLESTONE_WALL || block == Blocks.DARK_OAK_FENCE || block == Blocks.NETHER_BRICK_FENCE)
 		{
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
 		    	add((Reference.VOXEL_SIZE/4));
@@ -272,6 +289,7 @@ public class TextureInfo
 		}
 		else if(block == Blocks.IRON_BARS)
 		{
+			state = state.getActualState(DimensionManager.getWorld(0), pos);
 			ArrayList<Integer> oldPos = (ArrayList<Integer>) objIn.get("p");
 			int centerX = oldPos.get(0);
 			int bottomY = oldPos.get(1);
@@ -284,25 +302,55 @@ public class TextureInfo
 	    	}};
 			objIn.put("s", voxelSize);
 			
-			ArrayList<Integer> newPos = new ArrayList<Integer>() {{
-    			add(centerX-2);
-    			add(bottomY);
-    			add(centerZ);
-    		}};
-    		objIn.put("p", newPos);
-    		
-    		fancyObj.add(objIn);
-    		
-    		Map bars2 = (Map) ((LinkedHashMap)objIn).clone();
-    		
-    		newPos = new ArrayList<Integer>() {{
-    			add(centerX+2);
-    			add(bottomY);
-    			add(centerZ);
-    		}};
-    		bars2.put("p", newPos);
-    		
-    		fancyObj.add(bars2);
+			if(state.getValue(BlockFence.EAST) || state.getValue(BlockFence.WEST))
+			{
+				ArrayList<Integer> newPos = new ArrayList<Integer>() {{
+	    			add(centerX-2);
+	    			add(bottomY);
+	    			add(centerZ);
+	    		}};
+	    		objIn.put("p", newPos);
+	    		
+	    		fancyObj.add(objIn);
+	    		
+	    		Map bars2 = (Map) ((LinkedHashMap)objIn).clone();
+	    		
+	    		newPos = new ArrayList<Integer>() {{
+	    			add(centerX+2);
+	    			add(bottomY);
+	    			add(centerZ);
+	    		}};
+	    		bars2.put("p", newPos);
+	    		
+	    		fancyObj.add(bars2);
+			}
+			else if((state.getValue(BlockFence.NORTH) || state.getValue(BlockFence.SOUTH)))
+			{
+				ArrayList<Integer> newPos = new ArrayList<Integer>() {{
+	    			add(centerX);
+	    			add(bottomY);
+	    			add(centerZ-2);
+	    		}};
+	    		objIn.put("p", newPos);
+	    		
+	    		fancyObj.add(objIn);
+	    		
+	    		Map bars2 = (Map) ((LinkedHashMap)objIn).clone();
+	    		
+	    		newPos = new ArrayList<Integer>() {{
+	    			add(centerX);
+	    			add(bottomY);
+	    			add(centerZ+2);
+	    		}};
+	    		bars2.put("p", newPos);
+	    		
+	    		fancyObj.add(bars2);
+				
+			}
+			else
+			{
+				fancyObj.add(objIn);
+			}
 		}
 		else if(block == Blocks.CHEST)
 		{
@@ -339,7 +387,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);		
 		}
-		else if(block == Blocks.WOOL)
+		else if(block == Blocks.WOOL || block == Blocks.HARDENED_CLAY || block == Blocks.STAINED_HARDENED_CLAY)
 		{
 			objIn.put("c", MapColor.BLOCK_COLORS[block.getMetaFromState(state)].colorValue);
 			fancyObj.add(objIn);
@@ -355,7 +403,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);
 		}
-		else if(block == Blocks.OAK_STAIRS || block == Blocks.STONE_STAIRS || block == Blocks.SPRUCE_STAIRS || block == Blocks.DARK_OAK_STAIRS || block == Blocks.STONE_BRICK_STAIRS || block == Blocks.BRICK_STAIRS || block == Blocks.NETHER_BRICK_STAIRS || block == Blocks.SANDSTONE_STAIRS || block == Blocks.JUNGLE_STAIRS)
+		else if(block == Blocks.OAK_STAIRS || block == Blocks.STONE_STAIRS || block == Blocks.SPRUCE_STAIRS || block == Blocks.DARK_OAK_STAIRS || block == Blocks.STONE_BRICK_STAIRS || block == Blocks.BRICK_STAIRS || block == Blocks.NETHER_BRICK_STAIRS || block == Blocks.SANDSTONE_STAIRS || block == Blocks.JUNGLE_STAIRS || block == Blocks.QUARTZ_STAIRS)
 		{
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
 		    	add((Reference.VOXEL_SIZE));
@@ -537,8 +585,14 @@ public class TextureInfo
     		
     		fancyObj.add(anvilTop);
 		}
+		else if(block == Blocks.REDSTONE_LAMP || block == Blocks.GLOWSTONE)
+		{
+			objIn.put("e", 0xE1FF00);
+			fancyObj.add(objIn);
+		}
 		
 		return fancyObj;
 	}
+	
 
 }
