@@ -16,7 +16,7 @@ public class MergeBlocks
 	{   
 		
 		objs = sortJSONArray(objs);
-		objs = voxelMerge(objs);
+		//objs = voxelMerge(objs);
 
 		return objs;
 	}

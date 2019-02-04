@@ -46,8 +46,10 @@ public class TextureInfo
 		textures.put("minecraft:grass", new int[] {1,0x6CD75D,10,1,0});
 		textures.put("minecraft:sand", new int[] {5,0x897946,10,1,0});
 		textures.put("minecraft:sandstone", new int[] {5,0x897946,10,1,0});
+		textures.put("minecraft:red_sandstone", new int[] {1,0xFF8700,10,1,0});
 		textures.put("minecraft:gravel", new int[] {1,0x6899A0,10,1,0});
 		textures.put("minecraft:clay", new int[] {5,0x6D7B7B,10,1,0});
+		textures.put("minecraft:noteblock", new int[] {2,0,10,1,0});
 		textures.put("minecraft:planks", new int[] {2,0,10,1,0});
 		textures.put("minecraft:log", new int[] {2,0xB68E73,10,1,0});
 		textures.put("minecraft:log2", new int[] {2,0xB68E73,10,1,0});
@@ -57,7 +59,9 @@ public class TextureInfo
 		textures.put("minecraft:water", new int[] {1,0x0B8DD4,8,0,0});
 		textures.put("minecraft:lava", new int[] {1,0x9B350B,10,1,0});
 		textures.put("minecraft:glass", new int[] {5,0xADD3ED,4,1,0});
+		textures.put("minecraft:stained_glass", new int[] {5,0xADD3ED,4,1,0});
 		textures.put("minecraft:glass_pane", new int[] {5,0xADD3ED,4,1,0});
+		textures.put("minecraft:stained_glass_pane", new int[] {5,0xADD3ED,4,1,0});
 		textures.put("minecraft:double_stone_slab", new int[] {5,0x7F7F7F,10,1,0});
 		textures.put("minecraft:double_wooden_slab", new int[] {2,0,10,1,0});
 		textures.put("minecraft:snow", new int[] {5,0xFFFAFA,10,1,0});
@@ -68,9 +72,13 @@ public class TextureInfo
 		textures.put("minecraft:obsidian", new int[] {0,0x6F0F75,10,1,0});
 		textures.put("minecraft:bedrock", new int[] {0,0x505050,10,1,0});
 		textures.put("minecraft:netherrack", new int[] {0,0xD23838,10,1,0});
+		textures.put("minecraft:coal_block", new int[] {1,0x1E1E22,10,1,0});
+		textures.put("minecraft:quartz_block", new int[] {5,0xBECAD4,10,1,0});
 		
 		//complex models
 		textures.put("minecraft:fence", new int[] {2,0,10,1,1});
+		textures.put("minecraft:spruce_fence", new int[] {2,0,10,1,1});
+		textures.put("minecraft:birch_fence", new int[] {2,0,10,1,1});
 		textures.put("minecraft:dark_oak_fence", new int[] {2,0xACABAB,10,1,1});
 		textures.put("minecraft:nether_brick_fence", new int[] {0,0x910D1D,10,1,1});
 		textures.put("minecraft:cobblestone_wall", new int[] {0,0,10,1,1});
@@ -103,6 +111,7 @@ public class TextureInfo
 		textures.put("minecraft:stained_hardened_clay", new int[] {1,0,10,1,1});
 		textures.put("minecraft:anvil", new int[] {5,0x2A2A2A,10,1,1});
 		textures.put("minecraft:redstone_lamp", new int[] {5,0x939366,10,1,1});
+		textures.put("minecraft:lit_redstone_lamp", new int[] {5,0x939366,10,1,1});
 		textures.put("minecraft:glowstone", new int[] {5,0x939366,10,1,1});
 		
 		//ignored blocks
@@ -110,6 +119,8 @@ public class TextureInfo
 		textures.put("minecraft:ladder", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:torch", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:wooden_door", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:birch_door", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:dark_oak_door", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:iron_door", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:lever", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:rail", new int[] {-1,0,0,0,0});
@@ -120,9 +131,16 @@ public class TextureInfo
 		textures.put("minecraft:sign", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:wall_sign", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:stone_button", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:wooden_button", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:barrier", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:flower_pot", new int[] {-1,0,0,0,0});
 		textures.put("minecraft:trapdoor", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:dark_oak_fence_gate", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:tripwire_hook", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:hopper", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:bookshelf", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:hay_block", new int[] {-1,0,0,0,0});
+		textures.put("minecraft:wall_banner", new int[] {-1,0,0,0,0});
 	}
 	
 	public static JSONArray addTextureInfo(Map objIn, IBlockState state, BlockPos pos)
@@ -199,9 +217,11 @@ public class TextureInfo
 			
 			ArrayList<Integer> oldPos = (ArrayList<Integer>) objIn.get("p");
 			
+			//brick slabs
 			if(meta == 4 || (meta - 8) == 4)
 			{
 				objIn.put("c", 0xC84B4B);
+				objIn.remove("t");
 			}
 			
 			//upper slab
@@ -217,7 +237,7 @@ public class TextureInfo
 			
 			fancyObj.add(objIn);
 		}
-		else if(block == Blocks.OAK_FENCE || block == Blocks.COBBLESTONE_WALL || block == Blocks.DARK_OAK_FENCE || block == Blocks.NETHER_BRICK_FENCE)
+		else if(block == Blocks.OAK_FENCE || block == Blocks.COBBLESTONE_WALL || block == Blocks.DARK_OAK_FENCE || block == Blocks.NETHER_BRICK_FENCE || block == Blocks.SPRUCE_FENCE || block == Blocks.BIRCH_FENCE)
 		{
 			ArrayList<Integer> voxelSize = new ArrayList<Integer>() {{
 		    	add((Reference.VOXEL_SIZE/4));
@@ -585,7 +605,7 @@ public class TextureInfo
     		
     		fancyObj.add(anvilTop);
 		}
-		else if(block == Blocks.REDSTONE_LAMP || block == Blocks.GLOWSTONE)
+		else if(block == Blocks.REDSTONE_LAMP || block == Blocks.GLOWSTONE || block == Blocks.LIT_REDSTONE_LAMP)
 		{
 			objIn.put("e", 0xE1FF00);
 			fancyObj.add(objIn);
